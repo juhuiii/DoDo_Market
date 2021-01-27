@@ -19,14 +19,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     # restframework
     'rest_framework',
+
+    # CORS
     'corsheaders',
 
     # apps
     'users',
     'products',
     'orders',
+
+    'rest_framework.authtoken',
+    'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -113,3 +123,5 @@ CORS_ALLOW_METHODS = (
     'POST',
     'PUT',
 )
+
+AUTH_USER_MODEL = 'users.User'
