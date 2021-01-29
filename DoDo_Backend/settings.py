@@ -1,6 +1,7 @@
 from pathlib import Path
 import environ
 import datetime
+import os
 
 env = environ.Env(
 
@@ -109,6 +110,10 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
+
+# Media 파일
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # JWT 인증 설정
 REST_USE_JWT = True
