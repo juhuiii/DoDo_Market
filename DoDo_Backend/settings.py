@@ -1,5 +1,8 @@
 from pathlib import Path
 import environ
+import datetime
+import os
+
 env = environ.Env(
 
     DEBUG=(bool, False)
@@ -19,14 +22,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     # restframework
     'rest_framework',
+
+    # CORS
     'corsheaders',
 
     # apps
     'users',
     'products',
     'orders',
+
+    'rest_framework.authtoken',
+    'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -98,6 +111,23 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Media 파일
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# JWT 인증 설정
+REST_USE_JWT = True
+
+JWT_AUTH = {
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',  # 암호화 알고리즘
+    'JWT_ALLOW_REFRESH': True,  # 토큰 갱신여부
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),  # 토큰 유효기간
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),  # 토큰 갱신 유효기간
+}
+
+
+# CORS
 CORS_ORIGIN_ALLOW_ALL = True  # 모든 요청을 허락한다는 헤더
 
 
@@ -113,3 +143,6 @@ CORS_ALLOW_METHODS = (
     'POST',
     'PUT',
 )
+
+# 커스텀 USER모델
+AUTH_USER_MODEL = 'users.User'
