@@ -15,13 +15,14 @@ class Product(models.Model):
 
     category = models.CharField(
         max_length=5,
+        null=False,
         choices=CATEGORY_CHOICES,
     )
-    name = models.CharField(max_length=200)
-    origin = models.CharField(max_length=200)
+    name = models.CharField(max_length=200,null=False)
+    origin = models.CharField(max_length=200,default="상세설명참조")
     description = models.TextField(max_length=2000, null=True)
-    price = models.PositiveIntegerField()
-    stock = models.PositiveIntegerField()
+    price = models.PositiveIntegerField(null=False)
+    stock = models.PositiveIntegerField(null=False)
     like = models.IntegerField(default=0)
     availble_display = models.BooleanField(default=True)
     available_order = models.BooleanField(default=True)
