@@ -24,7 +24,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField(null=False)
     stock = models.PositiveIntegerField(null=False)
     like = models.IntegerField(default=0)
-    availble_display = models.BooleanField(default=True)
+    available_display = models.BooleanField(default=True)
     available_order = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -37,7 +37,6 @@ class Product(models.Model):
             'id': self.pk,
             'name': self.name,
             'origin': self.origin,
-            'thumbnail': self.product_image.get_info().filter('defalut' == True),
             'images': [
                 image.get_info()
                 for image
@@ -47,7 +46,7 @@ class Product(models.Model):
             'price': self.price,
             'stock': self.stock,
             'like': self.like,
-            'availble_display': self.availabe_display,
+            'available_display': self.available_display,
             'available_order': self.available_order,
             'created': self.created,
             'updated': self.updated,
@@ -62,15 +61,13 @@ class ProductImage(models.Model):
         default=None,
     )
     image = models.ImageField(upload_to='products/')
-    default = models.BooleanField(default=False)  # 대표이미지
 
     def get_info(self):
         return {
             'id': self.pk,
             'image': self.image.url,
-            'thumbnail': self.default,
         }
-
+    
     # 자동삭제
     def delete(self, *args, **kwargs):
         # You have to prepare what you need before delete the model
