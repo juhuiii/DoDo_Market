@@ -7,21 +7,20 @@ from rest_framework import generics
 
 from .models import Product
 from .serializers import (
-    ProductSerilaizer,
-    ProductListSerializer,
+    ProductSerializer,
     ProductImageCreateSerializer,
     ProductImageDeleteSerializer
 )
 
 
 class ProductList(generics.ListAPIView):
-    serializer_class = ProductListSerializer
+    serializer_class = ProductSerializer
     
     def get_queryset(self):
         #카테고리별로 분류해서 가져오기
         query_params = self.request.query_params
         
-        sort = self.request.query_params.get('sort')
+        sort = query_params.get('sort')
         sort_values=set(['-created','price','-price','-like'])
         if sort == None or not sort in sort_values :
             sort = '-created'
@@ -42,7 +41,7 @@ class ProductList(generics.ListAPIView):
             return queryset
 
 class ProductCreate(generics.CreateAPIView):
-    serializer_class = ProductSerilaizer
+    serializer_class = ProductSerializer
     permission_classes = [IsAdminUser]
 
     def perform_create(self, serializer):
@@ -54,10 +53,38 @@ class ProductCreate(generics.CreateAPIView):
             raise exceptions.ValidationError('잘못된 형식입니다.')
 
 
-
 class ProductDetail(generics.RetrieveAPIView):
-    serializer_class = ProductSerilaizer
+    serializer_class = ProductSerializer
     queryset = Product.objects.all()
+
+
+class ProductUpdate(generics.UpdateAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        return Product.objects
+
+    def get_object(self):
+        object = super().get_object()
+        if self.request.user.is_superuser:
+            return object
+        else:
+            raise exceptions.PermissionDenied('수정 할 권한이 없습니다.')
+
+
+class ProductDelete(generics.DestroyAPIView):
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return Product.objects
+
+    def get_object(self):
+        object = super().get_object()
+        if self.request.user.is_superuser:
+            return object
+        else:
+            raise exceptions.PermissionDenied('수정 할 권한이 없습니다.')
 
 
 class ProductImageCreate(generics.CreateAPIView):
@@ -65,10 +92,8 @@ class ProductImageCreate(generics.CreateAPIView):
     permission_classes = [IsAdminUser]
 
     def perform_create(self, serializer):
-        if not self.request.user.is_authenticatied:
-            raise exceptions.PermissionDenied('로그인이 필요합니다.')
         if not self.request.user.is_superuser:
-            raise exceptions.PermissionDenied('해당 매물을 수정 할 권한이 없습니다.')
+            raise exceptions.PermissionDenied('해당 상품을 수정 할 권한이 없습니다.')
         try:
             return serializer.save()
         except IntegrityError:
@@ -77,13 +102,14 @@ class ProductImageCreate(generics.CreateAPIView):
 
 class ProductImageDelete(generics.DestroyAPIView):
     serializer_class = ProductImageDeleteSerializer
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         return ProductImage.objects.select_related('product_user')
 
     def get_object(self):
         object = super().get_object()
-        if object.product.user == self.request.user:
+        if self.request.user.is_superuser:
             return object
         else:
-            raise exceptions.PermissionDenied('해당 매물을 수정할 권한이 없습니다.')
+            raise exceptions.PermissionDenied('해당 상품을 수정할 권한이 없습니다.')

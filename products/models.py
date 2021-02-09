@@ -58,7 +58,6 @@ class ProductImage(models.Model):
         Product,
         models.CASCADE,
         related_name='product_image',
-        default=None,
     )
     image = models.ImageField(upload_to='products/')
 
