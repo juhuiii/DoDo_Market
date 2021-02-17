@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Product(models.Model):
     CATEGORY_CHOICES = (
         ('VGTBL', '채소'),  # Vegetable
@@ -35,6 +34,7 @@ class Product(models.Model):
     def get_info(self):
         return {
             'id': self.pk,
+            'category': self.category,
             'name': self.name,
             'origin': self.origin,
             'images': [

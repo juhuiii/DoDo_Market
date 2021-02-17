@@ -5,7 +5,16 @@ from .models import Product,ProductImage
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = (
+            'category',
+            'name',
+            'origin',
+            'description',
+            'price',
+            'stock',
+            'available_display',
+            'available_order',
+        )
     
     def to_representation(self, instance):
         return instance.get_info()
