@@ -36,3 +36,9 @@ class ProductImageCreateSerializer(serializers.ModelSerializer):
 class ProductImageDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
+
+
+class ProductLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields=('like',)        

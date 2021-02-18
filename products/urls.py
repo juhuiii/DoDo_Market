@@ -8,6 +8,8 @@ from .views import (
     ProductDelete,
     ProductImageCreate,
     ProductImageDelete,
+    ProductIncreaseLike,
+    ProductDecreaseLike,
 )
 
 
@@ -19,5 +21,7 @@ urlpatterns = [
     path('<int:pk>/delete', ProductDelete.as_view()),
     path('image/create', ProductImageCreate.as_view()),
     path('image/<int:pk>/delete', ProductImageDelete.as_view()),
+    path('like/<int:pk>/increase/', ProductIncreaseLike.as_view()),
+    path('like/<int:pk>/decrease/', ProductDecreaseLike.as_view()),
 ]
 

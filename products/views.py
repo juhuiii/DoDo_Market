@@ -10,6 +10,7 @@ from .serializers import (
     ProductSerializer,
     ProductImageCreateSerializer,
     ProductImageDeleteSerializer,
+    ProductLikeSerializer,
 )
 
 
@@ -113,3 +114,23 @@ class ProductImageDelete(generics.DestroyAPIView):
             return object
         else:
             raise exceptions.PermissionDenied('해당 상품을 수정할 권한이 없습니다.')
+
+
+class ProductIncreaseLike(generics.UpdateAPIView):
+    serializer_class = ProductLikeSerializer
+    queryset =Product.objects.all()
+    
+    def get_object(self):
+        object = super().get_object()
+        object.like = object.like + 1
+        return object
+
+
+class ProductDecreaseLike(generics.UpdateAPIView):
+    serializer_class = ProductLikeSerializer
+    queryset = Product.objects.all()
+    
+    def get_object(self):
+        object = super().get_object()
+        object.like = object.like - 1 if object.like > 0 else 0
+        return object
